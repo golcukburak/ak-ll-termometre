@@ -1,1 +1,2 @@
 # akilli termometre
+TÜRKİYE
