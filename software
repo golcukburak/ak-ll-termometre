@@ -1,0 +1,91 @@
+/*OSTİM TEKNİK ÜNİVERSİTESİ ELEKTRONİK TEKNOLOJİSİ BÖLÜMÜ
+  BURAK GÖLCÜK
+  190402010
+  İŞ YERİ DENEYİMİ DERSİ PROJESİ
+  LCD GÖSTERGELİ TERMOMETRE UYGULAMASI KODU
+ */
+
+
+#include <LiquidCrystal_I2C.h>//ekran kütüphanesini tanımlama
+#include<Wire.h> 
+int lm35 = A0;//lm 35 sıcaklık sensörünü a0 pinine tanımlama 
+
+LiquidCrystal_I2C lcd(0x27,16,2);//ekran ölcülerinin belirtilmesi
+ 
+void setup() 
+{
+  lcd.begin();//ekranı başlatma
+  analogReference(INTERNAL);
+  lcd.print("BURAK GOLCUK");//açılış ekranına burak gölcük yazdırma
+  delay (1000);//1 SANİYE GECİKME
+  lcd.clear();//EKRANI TEMİZLEME
+  lcd.print("Sicaklik Olcumu:");//ekrana sıcaklık değerini yazdırma
+ 
+  pinMode(2,OUTPUT);//YEŞİL LED i2 nolu pine çıkış olarak atama
+  pinMode(A0,INPUT);//LM35(sıcaklık sensörü) A0 pinine giriş olarak atama
+  pinMode(7,OUTPUT);//KIRMIZI LED i 7 nolu pine çıkış olarak tanımlama
+  pinMode(12,OUTPUT);//BİLDİRİM UYARISI(BUZZER) 12 nolu pinw çıkış olarak tanımlama
+  pinMode(5,OUTPUT);//MAVİ LED
+  pinMode(3,OUTPUT);//röle 1
+  pinMode(4,OUTPUT);// röle 2
+
+ 
+}
+ 
+void loop()
+{
+  int sicaklikVolt = analogRead(A0); //sıcaklık sensörünü(lm35) oku
+  float sicaklikC = sicaklikVolt /9; //celciusa cevire
+  lcd.setCursor(0, 1);
+  lcd.print(sicaklikC);
+  lcd.setCursor(6,1);
+  lcd.print("");
+
+
+if(sicaklikC<30&&sicaklikC>=24)//eğer sıcaklık değeri 30 dan küçükse (sıcaklık iyi )
+{
+
+digitalWrite(2,HIGH);//yeşil led e 5v ver
+digitalWrite(7,LOW);//kırmızı led e 0v ver
+digitalWrite(12,LOW);//buzzer a 0v ver
+digitalWrite(5,LOW);//MAVİ LED 0v ver
+digitalWrite(3,HIGH);//röle 1
+digitalWrite(4,HIGH);// röle 2
+delay (300);// 300 ms gecikme
+}
+if(sicaklikC>=33)//eğer sıcaklık değeri 32 den büyükse  (çok sıcak)
+{
+  lcd.clear();
+analogReference(INTERNAL);
+lcd.print("fan calisti");
+delay(5000);
+ lcd.clear();//EKRANI TEMİZLEME
+  lcd.print("Sicaklik Olcumu:");
+
+digitalWrite(2,LOW);//yeşil led e 0v ver
+digitalWrite(7,HIGH);//kırmızı led e 5v ver
+digitalWrite(12,HIGH);// buzzer a 5v ver
+digitalWrite(5,LOW);//MAVİ LED 0v ver
+digitalWrite(3,LOW);//röle 1
+delay (10000);// 10 saniye gecikme
+digitalWrite(3,HIGH);//röle 1
+}
+if(sicaklikC<=19) //eğer sıcaklık 19 dereceden küçükse (çok soğuk)
+{
+ lcd.clear();
+analogReference(INTERNAL);
+lcd.print("klima calisti");
+delay(5000);
+ lcd.clear();//EKRANI TEMİZLEME
+  lcd.print("Sicaklik Olcumu:");
+ 
+digitalWrite(2,LOW);//yeşil led e 0v ver
+digitalWrite(7,LOW);//kırmızı led e 0v ver
+digitalWrite(12,HIGH);//buzzer a 5v ver
+digitalWrite(5,HIGH);//MAVİ LED 5v ver
+digitalWrite(4,LOW);// röle 2
+delay (10000);//10 saniye gecikme
+digitalWrite(4,HIGH);// röle 2
+}
+}
+// röle 1 ve röle 2 komutlar ters şekilde verilmiştir.(low-->high  high-->low)
