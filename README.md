@@ -1,1 +1,1 @@
-# akillitermometre
+# akilli termometre
