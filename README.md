@@ -1,4 +1,4 @@
 # akilli termometre
 TÜRKİYE
 
-OSTİM TEKNİK ÜNİVERSİTE DERS PROJESİ
+OSTİM TEKNİK ÜNİVERSİTESİ DERS PROJESİ
